@@ -1,0 +1,173 @@
+<html>
+<head>
+	<title>Joguinho</title>
+</head>
+<body>
+	<div id="pontuacao">0</div>
+	<div id="campo"></div>
+
+	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript">
+		var campo = [
+			[1,1,1,1,1,1,1,1,1,1],
+			[1,0,0,0,0,0,0,0,0,1],
+			[1,1,1,1,1,1,1,1,0,1],
+			[1,0,0,0,0,0,0,1,0,1],
+			[1,0,1,1,1,1,0,1,0,1],
+			[1,0,1,0,0,1,0,1,0,1],
+			[1,0,1,0,0,0,0,1,0,1],
+			[1,0,1,1,1,1,1,1,0,1],
+			[1,0,0,0,0,0,0,0,0,1],
+			[1,1,1,1,1,1,1,1,1,1]
+		];
+		var bolinhas = [2,3,2,4];
+		var pontuacao = 0;
+
+		for(var i = 0; i < 10; i++){
+			for(var j = 0 ; j < 10 ; j++){
+				var bloco = $('<div/>',{
+					class: 'bloco',
+					id: i+''+j
+				});
+				if(campo[i][j]==1){
+					bloco.addClass('solido');
+				}
+				$('#campo').append(bloco);
+
+			}
+		}
+
+		var posicaoX = Math.floor(Math.random() * (0 - 9)) + 9;
+		var posicaoY = Math.floor(Math.random() * (0 - 9)) + 9;
+
+		while(campo[posicaoX][posicaoY]==1){
+			var posicaoX = Math.floor(Math.random() * (0 - 9)) + 9;
+			var posicaoY = Math.floor(Math.random() * (0 - 9)) + 9;
+		}
+
+		var jogador = $('<div/>',{
+			id:'jogador'
+		});
+
+		$('#'+posicaoX+''+posicaoY).append(jogador);
+
+
+		//Bolinhas
+		for(var i = 0 ; i < bolinhas.length; i++){
+			var posicaoX = Math.floor(Math.random() * (0 - 9)) + 9;
+			var posicaoY = Math.floor(Math.random() * (0 - 9)) + 9;
+
+			while(campo[posicaoX][posicaoY]!=0){
+				var posicaoX = Math.floor(Math.random() * (0 - 9)) + 9;
+				var posicaoY = Math.floor(Math.random() * (0 - 9)) + 9;
+			}
+
+			campo[posicaoX][posicaoY] = bolinhas[i];
+
+			$('#'+posicaoX+''+posicaoY).append($('<div/>',{
+				class: 'bolinhas'
+			}));
+
+		}
+
+		$(document).keydown(function(e){
+			//UP
+			switch(e.wich || e.keyCode){
+				//left
+				case 37: left();break;
+				case 38: up();break;
+				case 39: rigth();break;
+				case 40: down();break;
+			}
+		});
+
+		function left(){
+			var id = $('#jogador').parent().attr('id');
+			var ids = id.split('');
+			var x = parseInt(ids[0]);
+			var y = parseInt(ids[1]);
+			y--;
+			if(campo[x][y]!=1){
+				muda(x,y)
+			}
+
+		}
+
+		function up(){
+			var id = $('#jogador').parent().attr('id');
+			var ids = id.split('');
+			var x = parseInt(ids[0]);
+			var y = parseInt(ids[1]);
+			x--;
+			if(campo[x][y]!=1){
+				muda(x,y)
+			}
+
+		}
+
+		function rigth(){
+			var id = $('#jogador').parent().attr('id');
+			var ids = id.split('');
+			var x = parseInt(ids[0]);
+			var y = parseInt(ids[1]);
+			y++;
+			if(campo[x][y]!=1){
+				muda(x,y)
+			}
+
+		}
+
+		function down(){
+			var id = $('#jogador').parent().attr('id');
+			var ids = id.split('');
+			var x = parseInt(ids[0]);
+			var y = parseInt(ids[1]);
+			x++;
+			if(campo[x][y]!=1){
+				muda(x,y)
+			}
+
+		}
+
+		function muda(x,y){
+			if(campo[x][y]>1){
+				pontuacao += campo[x][y];
+				campo[x][y] = 0;
+				$('#pontuacao').html(pontuacao);
+				$('#'+x+''+y).empty();
+			}
+			$('#jogador').parent().empty();
+			$('#'+x+''+y).append(jogador)
+		}
+
+	</script>
+</body>
+<style type="text/css">
+	#campo{
+		width: 300px;
+		height: 300px;
+		border: 1px solid black;
+	}
+	.bloco{
+		width: 30px;
+		height: 30px;
+		float: left;
+		position: relative;
+	}
+	.solido{
+		background: black;
+	}
+	.bolinhas{
+		width: 30px;
+		height: 30px;
+		border-radius: 100%;
+		background: blue;
+	}
+	#jogador{
+		width: 30px;
+		height: 30px;
+		border-radius: 100%;
+		background: red;
+	}
+</style>
+</html>
